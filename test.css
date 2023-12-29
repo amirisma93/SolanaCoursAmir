@@ -1,0 +1,26 @@
+body {
+    background-color: rgb(14, 1, 27);
+    color: white;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 20px;
+}
+
+#solanaLogo {
+    margin-bottom: 10px;
+    width: 200px; /* Ajustez la largeur selon vos besoins */
+    height: auto; /* Garantit que la hauteur s'ajuste proportionnellement à la largeur */
+}
+
+#trade {
+    font-size: 50px;
+    color: rgb(255, 174, 0);
+    margin-bottom: 20px;
+}

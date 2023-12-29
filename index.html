@@ -5,33 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solana Price</title>
     <style>
-        /* Ajouter une règle CSS pour le conteneur */
+        body {
+            background-color: rgb(14, 1, 27);
+            color: white;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
         #container {
             display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
+            margin-top: 20px;
+            position: relative;
         }
 
-        /* Ajouter une règle CSS pour le logo Solana */
         #solanaLogo {
-            margin-right: 10px; /* Ajoute une marge à droite du logo */
+            margin-bottom: 10px;
+            width: 130px; /* Ajustez la largeur selon vos besoins */
+            height: auto; /* Garantit que la hauteur s'ajuste proportionnellement à la largeur */
         }
 
-        /* Ajouter une règle CSS pour la taille du texte */
         #trade {
-            font-size: 50px; /* Ajustez la taille selon vos préférences */
+            font-size: 50px;
+            color: rgb(255, 174, 0);
+            margin-bottom: 20px;
+        }
+
+        #dateTime {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 16px;
+        }
+
+        #developerInfo {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #developerInfo img {
+            width: 50px; /* Ajustez la largeur selon vos besoins */
+            height: auto; /* Garantit que la hauteur s'ajuste proportionnellement à la largeur */
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
 
-<!-- Element pour afficher le prix et l'image -->
+<!-- Element for displaying the logo, price, and chart -->
 <div id="container">
+    <div id="dateTime"></div>
     <img src="Solana.png" alt="Logo Solana" id="solanaLogo">
     <span id="trade"></span>
+    <canvas id="priceChart" width="400" height="200"></canvas>
+
+    <!-- Developer info -->
+    <div id="developerInfo">
+        <img src="amir.jpg" alt="Amir's Photo">
+        <img src="gpt.jpg" alt="Chat GPT's Photo">
+        <p>Développé par Amir Isma et Chat GPT</p>
+    </div>
 </div>
 
-<!-- Votre script JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js"></script>
+
+<script>
+    function updateDateTime() {
+        const dateTimeElement = document.getElementById('dateTime');
+        const now = new Date();
+        const formattedDateTime = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+        dateTimeElement.textContent = formattedDateTime;
+    }
+
+    // Update the date and time every second
+    setInterval(updateDateTime, 1000);
+
+    // Initial update
+    updateDateTime();
+</script>
 
 </body>
 </html>
