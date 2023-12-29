@@ -11,6 +11,9 @@ const ctx = chartCanvas.getContext('2d');
 // Initialize the initial price
 let initialPrice;
 
+// Initialize the maximum price
+let maxPrice = 0;
+
 // Create the Chart.js chart
 const priceChart = new Chart(ctx, {
     type: 'line',
@@ -21,7 +24,9 @@ const priceChart = new Chart(ctx, {
             data: [],
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 2,
-            fill: false
+            pointRadius: 0,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true
         }]
     },
     options: {
@@ -31,7 +36,6 @@ const priceChart = new Chart(ctx, {
                 position: 'bottom',
                 ticks: {
                     callback: (value, index, values) => {
-                        // Display only every 3rd label
                         return index % 3 === 0 ? value : '';
                     }
                 }
@@ -46,7 +50,7 @@ const priceChart = new Chart(ctx, {
                     },
                 },
                 gridLines: {
-                    color: 'rgba(255, 255, 255, 0.2)' // Couleur de la grille en blanc avec une opacité réduite
+                    color: 'rgba(255, 255, 255, 0.2)'
                 }
             }]
         }
@@ -56,18 +60,23 @@ const priceChart = new Chart(ctx, {
 // Last update timestamp
 let lastUpdateTimestamp = 0;
 
+// Function to update the maximum price
+const updateMaxPrice = (currentPrice) => {
+    if (currentPrice > maxPrice) {
+        maxPrice = currentPrice;
+        document.getElementById('maxPrice').innerText = `Max: ${maxPrice.toFixed(2)} $`;
+    }
+};
+
 // WebSocket event handler
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
-    const timestamp = parseFloat(data.T); // Ensure data.T is in milliseconds
+    const timestamp = parseFloat(data.T);
 
     if (!initialPrice) {
-        // Set initial price on the first data received
         initialPrice = parseFloat(data.p).toFixed(2);
-
-        // Draw the initial price line on the chart
-        priceChart.data.labels.push(''); // Add an empty label to align with the tick
+        priceChart.data.labels.push('');
         priceChart.data.datasets[0].data.push(initialPrice);
         priceChart.update();
     }
@@ -83,20 +92,21 @@ ws.onmessage = (event) => {
         const formattedTime = `${hours}:${minutes}:${seconds}`;
         const formattedPrice = parseFloat(data.p).toFixed(2);
 
-        // Update the trade element
         document.getElementById('trade').innerText = `Solana : ${formattedPrice} $`;
 
-        // Update the chart data
         chartData.push({ x: formattedTime, y: parseFloat(formattedPrice) });
 
-        // Limit the chart data to a certain number of points (e.g., 50)
         if (chartData.length > 1500) {
-            chartData.shift(); // Remove the oldest data point
+            chartData.shift();
         }
-
-        // Update the Chart.js chart
+33
         priceChart.data.labels = chartData.map(point => point.x);
         priceChart.data.datasets[0].data = chartData.map(point => point.y);
+
+        // Update the maximum price
+        const currentPrice = parseFloat(formattedPrice);
+        updateMaxPrice(currentPrice);
+
         priceChart.update();
     }
 };
